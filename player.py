@@ -1,6 +1,7 @@
 import pygame
 from circleshape import CircleShape
-from constants import PLAYER_RADIUS, LINE_WIDTH, PLAYER_TURN_SPEED
+from constants import PLAYER_RADIUS, LINE_WIDTH, PLAYER_TURN_SPEED, SCREEN_WIDTH, SCREEN_HEIGHT
+import math
 
 class Player(CircleShape):
     def __init__(self, x, y):
@@ -30,3 +31,24 @@ class Player(CircleShape):
             self.rotate(-dt)
         if keys[pygame.K_d]:
             self.rotate(dt)
+
+        #experimental mouse turning logic below
+        # 1. Get mouse position
+        m_x, m_y = pygame.mouse.get_pos()
+
+        # 2. Find difference from center
+        center_x = SCREEN_WIDTH / 2
+        center_y = SCREEN_HEIGHT / 2
+        dx = m_x - center_x
+        dy = m_y - center_y
+
+        # 3. Calculate the angle in degrees
+        # We use -dy because Pygame's Y axis is inverted
+        target_angle = math.degrees(math.atan2(-dy, dx))
+
+
+        # 4. Set rotation: "-" is added to make the ship move the same angle as the mouse. -90 aligns the ship with the mouse
+        self.rotation = -target_angle - 90
+
+
+        
