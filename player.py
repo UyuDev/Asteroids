@@ -1,6 +1,7 @@
 import pygame
 from circleshape import CircleShape
-from constants import PLAYER_RADIUS, LINE_WIDTH, PLAYER_TURN_SPEED, SCREEN_WIDTH, SCREEN_HEIGHT, PLAYER_SPEED
+from shot import Shot
+from constants import PLAYER_RADIUS, LINE_WIDTH, PLAYER_TURN_SPEED, SCREEN_WIDTH, SCREEN_HEIGHT, PLAYER_SPEED, PLAYER_SHOOT_SPEED
 import math
 
 class Player(CircleShape):
@@ -41,7 +42,7 @@ class Player(CircleShape):
         #center_y = SCREEN_HEIGHT / 2
         #dx = m_x - center_x
         #dy = m_y - center_y
-        
+
         # 2 using current player position to calculate the difference
         current_x = self.position.x
         current_y = self.position.y
@@ -60,7 +61,8 @@ class Player(CircleShape):
             self.move(dt)
         if keys[pygame.K_s]:
             self.move(-dt)
-
+        if keys[pygame.K_SPACE]:
+            self.shoot()
 
 
     def move(self, dt):
@@ -68,3 +70,9 @@ class Player(CircleShape):
         rotated_vector = unit_vector.rotate(self.rotation)
         rotated_with_speed_vector = rotated_vector * PLAYER_SPEED * dt
         self.position += rotated_with_speed_vector
+
+
+    def shoot(self):
+        shot = Shot(self.position.x, self.position.y)
+        shot.velocity = pygame.Vector2(0, 1).rotate(self.rotation) * PLAYER_SHOOT_SPEED
+        
